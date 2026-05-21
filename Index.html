@@ -1,0 +1,1780 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuickBite — Entrega Rápida</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #FF6B35;
+    --orange-dark: #E5531F;
+    --orange-glow: rgba(255,107,53,0.15);
+    --bg: #0D0D0D;
+    --surface: #161616;
+    --surface2: #1E1E1E;
+    --surface3: #252525;
+    --border: rgba(255,255,255,0.08);
+    --border-accent: rgba(255,107,53,0.3);
+    --text: #F5F0EB;
+    --muted: #888;
+    --muted2: #555;
+    --gold: #F7B731;
+    --green: #27AE60;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --nav-w: 240px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    overflow-x: hidden;
+  }
+
+  /* ─── NAV SIDEBAR ─── */
+  .sidebar {
+    width: var(--nav-w);
+    min-height: 100vh;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0;
+    z-index: 100;
+    padding: 0 0 2rem;
+  }
+  .logo {
+    padding: 1.8rem 1.5rem 1.2rem;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: var(--orange);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .logo-text {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.2rem;
+    letter-spacing: -0.02em;
+  }
+  .logo-text span { color: var(--orange); }
+
+  .nav-section { padding: 1.2rem 1rem 0.4rem; }
+  .nav-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted2);
+    font-weight: 600;
+    padding: 0 0.5rem;
+    margin-bottom: 0.3rem;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 0.7rem 0.9rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.18s;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 2px;
+    border: none; background: none; width: 100%; text-align: left;
+  }
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active {
+    background: var(--orange-glow);
+    color: var(--orange);
+    border: 1px solid var(--border-accent);
+  }
+  .nav-item .nav-icon { font-size: 1.05rem; width: 20px; text-align: center; }
+  .nav-badge {
+    margin-left: auto;
+    background: var(--orange);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+    min-width: 20px; text-align: center;
+  }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding: 1rem;
+    border-top: 1px solid var(--border);
+  }
+  .user-card {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface2);
+    border-radius: var(--radius-sm);
+    padding: 0.7rem;
+  }
+  .avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--orange), var(--gold));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.8rem; flex-shrink: 0;
+  }
+  .user-info .user-name { font-size: 0.82rem; font-weight: 600; }
+  .user-info .user-sub { font-size: 0.72rem; color: var(--muted); }
+
+  /* ─── MAIN ─── */
+  .main {
+    margin-left: var(--nav-w);
+    flex: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ─── TOP BAR ─── */
+  .topbar {
+    position: sticky; top: 0;
+    background: rgba(13,13,13,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    z-index: 50;
+    padding: 1rem 2.5rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .topbar-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+  .search-bar {
+    flex: 1; max-width: 420px;
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    padding: 0.5rem 1rem;
+  }
+  .search-bar input {
+    background: none; border: none; outline: none;
+    color: var(--text); font-size: 0.85rem;
+    font-family: inherit; flex: 1;
+  }
+  .search-bar input::placeholder { color: var(--muted); }
+  .search-icon { color: var(--muted); font-size: 0.9rem; }
+
+  .topbar-actions { margin-left: auto; display: flex; align-items: center; gap: 0.7rem; }
+  .icon-btn {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--muted);
+    font-size: 1rem; transition: all 0.15s;
+  }
+  .icon-btn:hover { border-color: var(--border-accent); color: var(--orange); }
+  .delivery-badge {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.78rem; font-weight: 500;
+  }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+  /* ─── PAGES ─── */
+  .page { display: none; padding: 2rem 2.5rem; animation: fadeIn 0.3s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ─── SECTION HEADERS ─── */
+  .section-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 1.5rem; }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 1.25rem;
+  }
+  .section-title small { font-family: 'Plus Jakarta Sans',sans-serif; font-weight: 400; font-size: 0.75rem; color: var(--muted); margin-left: 8px; }
+  .see-all { font-size: 0.8rem; color: var(--orange); font-weight: 600; cursor: pointer; }
+
+  /* ─── HOME ─── */
+  .hero {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    overflow: hidden;
+    position: relative;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; right: 180px; top: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(255,107,53,0.12), transparent 70%);
+    pointer-events: none;
+  }
+  .hero-content { max-width: 380px; }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--orange-glow);
+    border: 1px solid var(--border-accent);
+    border-radius: 30px;
+    padding: 0.3rem 0.9rem;
+    font-size: 0.75rem; font-weight: 600; color: var(--orange);
+    margin-bottom: 1rem;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.4rem; font-weight: 800;
+    line-height: 1.1; letter-spacing: -0.03em;
+    margin-bottom: 0.8rem;
+  }
+  .hero h1 em { color: var(--orange); font-style: normal; }
+  .hero p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.5rem; }
+  .hero-actions { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--orange);
+    color: white; border: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 30px;
+    font-family: inherit; font-size: 0.875rem; font-weight: 600;
+    cursor: pointer; transition: all 0.18s;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-primary:hover { background: var(--orange-dark); transform: translateY(-1px); }
+  .btn-outline {
+    background: none; border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.7rem 1.5rem;
+    border-radius: 30px;
+    font-family: inherit; font-size: 0.875rem; font-weight: 600;
+    cursor: pointer; transition: all 0.18s;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-outline:hover { border-color: var(--border-accent); color: var(--orange); }
+
+  .hero-visual {
+    display: flex; flex-direction: column; align-items: flex-end; gap: 0.8rem;
+  }
+  .hero-stats {
+    display: flex; gap: 0.8rem;
+  }
+  .stat-chip {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.7rem 1rem;
+    text-align: center;
+  }
+  .stat-chip .num {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.3rem; font-weight: 800; color: var(--orange);
+    display: block;
+  }
+  .stat-chip .lbl { font-size: 0.7rem; color: var(--muted); }
+  .hero-food-emoji { font-size: 5rem; text-align: center; display: block; line-height: 1; }
+
+  /* ─── CATEGORIES ─── */
+  .categories-row {
+    display: flex; gap: 0.7rem; overflow-x: auto; padding-bottom: 0.3rem;
+    margin-bottom: 2rem; scrollbar-width: none;
+  }
+  .categories-row::-webkit-scrollbar { display: none; }
+  .cat-chip {
+    flex-shrink: 0;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 0.8rem 1.1rem;
+    cursor: pointer; transition: all 0.18s;
+    min-width: 80px;
+  }
+  .cat-chip:hover, .cat-chip.active {
+    border-color: var(--border-accent);
+    background: var(--orange-glow);
+  }
+  .cat-chip .cat-emoji { font-size: 1.6rem; }
+  .cat-chip .cat-name { font-size: 0.72rem; font-weight: 600; color: var(--muted); }
+  .cat-chip.active .cat-name { color: var(--orange); }
+
+  /* ─── FOOD CARDS ─── */
+  .food-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+  .food-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+  }
+  .food-card:hover { border-color: var(--border-accent); transform: translateY(-3px); }
+  .food-card-img {
+    width: 100%; height: 150px;
+    background: var(--surface2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .food-card-img::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 40px;
+    background: linear-gradient(transparent, var(--surface));
+  }
+  .badge-new, .badge-hot, .badge-popular {
+    position: absolute; top: 10px; left: 10px;
+    font-size: 0.65rem; font-weight: 700; padding: 3px 9px;
+    border-radius: 20px; z-index: 2;
+  }
+  .badge-new { background: #1B4D3E; color: #2ECC71; }
+  .badge-hot { background: #4D1B1B; color: #FF6B35; }
+  .badge-popular { background: #3D3010; color: var(--gold); }
+
+  .food-card-body { padding: 0.9rem; }
+  .food-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem; }
+  .food-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.4; margin-bottom: 0.7rem; }
+  .food-footer { display: flex; align-items: center; justify-content: space-between; }
+  .food-price { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.05rem; color: var(--orange); }
+  .food-rating { display: flex; align-items: center; gap: 4px; font-size: 0.75rem; color: var(--muted); }
+  .star { color: var(--gold); }
+  .add-btn {
+    width: 30px; height: 30px;
+    background: var(--orange);
+    border: none; border-radius: 8px;
+    color: white; font-size: 1.1rem;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .add-btn:hover { background: var(--orange-dark); transform: scale(1.05); }
+
+  /* ─── PROMOS ─── */
+  .promos-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 2rem; }
+  .promo-card {
+    border-radius: var(--radius);
+    padding: 1.4rem;
+    display: flex; align-items: center; justify-content: space-between;
+    position: relative; overflow: hidden;
+    cursor: pointer;
+  }
+  .promo-card.orange { background: linear-gradient(135deg, #FF6B35, #FF8C5A); }
+  .promo-card.dark { background: var(--surface); border: 1px solid var(--border); }
+  .promo-content {}
+  .promo-tag { font-size: 0.7rem; font-weight: 700; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4rem; }
+  .promo-card.orange .promo-tag { color: rgba(255,255,255,0.8); }
+  .promo-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem; line-height: 1.1; }
+  .promo-card.orange .promo-title { color: white; }
+  .promo-sub { font-size: 0.75rem; margin-top: 0.3rem; }
+  .promo-card.orange .promo-sub { color: rgba(255,255,255,0.8); }
+  .promo-card.dark .promo-sub { color: var(--muted); }
+  .promo-emoji { font-size: 3.2rem; }
+  .promo-btn {
+    margin-top: 0.8rem;
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    color: white; border: none;
+    padding: 0.35rem 0.9rem;
+    border-radius: 20px; font-size: 0.75rem; font-weight: 600;
+    cursor: pointer; backdrop-filter: blur(4px);
+  }
+
+  /* ─── POPULAR RESTAURANTS ─── */
+  .rest-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+  .rest-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.2rem;
+    display: flex; gap: 1rem; align-items: center;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .rest-card:hover { border-color: var(--border-accent); }
+  .rest-emoji-wrap {
+    width: 56px; height: 56px; flex-shrink: 0;
+    background: var(--surface2);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem;
+  }
+  .rest-info .rest-name { font-weight: 700; font-size: 0.9rem; margin-bottom: 3px; }
+  .rest-info .rest-tags { font-size: 0.72rem; color: var(--muted); margin-bottom: 5px; }
+  .rest-meta { display: flex; gap: 0.8rem; font-size: 0.72rem; color: var(--muted); }
+  .rest-meta span { display: flex; align-items: center; gap: 3px; }
+
+  /* ─── MENU PAGE ─── */
+  .menu-header { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .filter-btn {
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: none; color: var(--muted);
+    font-family: inherit; font-size: 0.8rem; font-weight: 600;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .filter-btn:hover, .filter-btn.active { border-color: var(--border-accent); color: var(--orange); background: var(--orange-glow); }
+  .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+
+  .menu-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    display: flex; gap: 1rem; padding: 1rem;
+    align-items: center; transition: all 0.2s; cursor: pointer;
+  }
+  .menu-card:hover { border-color: var(--border-accent); }
+  .menu-img {
+    width: 72px; height: 72px; flex-shrink: 0;
+    background: var(--surface2);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem;
+  }
+  .menu-info { flex: 1; }
+  .menu-name { font-weight: 700; font-size: 0.88rem; margin-bottom: 3px; }
+  .menu-desc { font-size: 0.72rem; color: var(--muted); margin-bottom: 6px; line-height: 1.3; }
+  .menu-bottom { display: flex; align-items: center; justify-content: space-between; }
+  .menu-price { font-family: 'Syne', sans-serif; font-weight: 800; color: var(--orange); font-size: 1rem; }
+
+  /* ─── DETAIL PAGE ─── */
+  .detail-layout { display: grid; grid-template-columns: 1fr 360px; gap: 2rem; }
+  .detail-main {}
+  .detail-hero {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    height: 280px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 8rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .detail-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at center, rgba(255,107,53,0.08), transparent 70%);
+  }
+  .detail-back {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 0.82rem; color: var(--muted);
+    cursor: pointer; margin-bottom: 1rem;
+    transition: color 0.15s;
+  }
+  .detail-back:hover { color: var(--orange); }
+  .detail-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.8rem; letter-spacing: -0.02em; margin-bottom: 0.6rem; }
+  .detail-meta { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  .detail-chip {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 0.35rem 0.8rem;
+    font-size: 0.78rem; color: var(--muted);
+  }
+  .detail-desc { color: var(--muted); line-height: 1.7; font-size: 0.875rem; margin-bottom: 1.5rem; }
+  .detail-section { margin-bottom: 1.5rem; }
+  .detail-section h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: 0.8rem; }
+
+  .option-group { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+  .option-pill {
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: none; color: var(--muted);
+    font-family: inherit; font-size: 0.8rem; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .option-pill:hover, .option-pill.active {
+    border-color: var(--border-accent);
+    background: var(--orange-glow);
+    color: var(--orange);
+  }
+
+  .extras-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .extra-item {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px; padding: 0.7rem 1rem;
+    font-size: 0.85rem;
+  }
+  .extra-chk {
+    width: 18px; height: 18px;
+    border: 1.5px solid var(--border);
+    border-radius: 5px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .extra-chk.checked { background: var(--orange); border-color: var(--orange); }
+  .extra-price { color: var(--orange); font-weight: 600; }
+
+  /* STICKY ORDER PANEL */
+  .order-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 1.5rem;
+    position: sticky; top: 90px;
+    height: fit-content;
+  }
+  .order-panel h3 { font-family: 'Syne', sans-serif; font-weight: 700; margin-bottom: 1rem; }
+  .qty-ctrl {
+    display: flex; align-items: center; gap: 1rem;
+    background: var(--surface2);
+    border-radius: 30px; padding: 0.4rem;
+    width: fit-content; margin-bottom: 1.2rem;
+  }
+  .qty-btn {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: none; background: var(--surface3);
+    color: var(--text); font-size: 1rem;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .qty-btn:hover { background: var(--orange); }
+  .qty-num { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; min-width: 24px; text-align: center; }
+  .price-breakdown { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+  .price-row { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--muted); }
+  .price-row.total { color: var(--text); font-weight: 700; font-size: 1rem; padding-top: 0.5rem; border-top: 1px solid var(--border); }
+  .price-row.total .amount { color: var(--orange); font-family: 'Syne', sans-serif; font-size: 1.1rem; }
+
+  /* ─── CART PAGE ─── */
+  .cart-layout { display: grid; grid-template-columns: 1fr 340px; gap: 2rem; align-items: start; }
+  .cart-items { display: flex; flex-direction: column; gap: 0.8rem; }
+  .cart-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.2rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .cart-item-img {
+    width: 60px; height: 60px; flex-shrink: 0;
+    background: var(--surface2); border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem;
+  }
+  .cart-item-info { flex: 1; }
+  .cart-item-name { font-weight: 700; font-size: 0.9rem; margin-bottom: 3px; }
+  .cart-item-opts { font-size: 0.72rem; color: var(--muted); }
+  .cart-item-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem; }
+  .cart-item-price { font-family: 'Syne', sans-serif; font-weight: 800; color: var(--orange); }
+  .mini-qty { display: flex; align-items: center; gap: 0.5rem; }
+  .mini-btn {
+    width: 26px; height: 26px; border-radius: 7px;
+    border: 1px solid var(--border); background: var(--surface2);
+    color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; transition: all 0.15s;
+  }
+  .mini-btn:hover { background: var(--orange); border-color: var(--orange); }
+  .del-btn {
+    background: none; border: none; color: var(--muted2);
+    cursor: pointer; font-size: 0.9rem; padding: 0.3rem;
+    transition: color 0.15s;
+  }
+  .del-btn:hover { color: #FF4444; }
+  .coupon-row {
+    display: flex; gap: 0.6rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin-top: 0.8rem;
+  }
+  .coupon-input {
+    flex: 1; background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px; padding: 0.5rem 1rem;
+    color: var(--text); font-family: inherit; font-size: 0.85rem;
+    outline: none;
+  }
+
+  .summary-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 1.5rem;
+  }
+  .summary-title { font-family: 'Syne', sans-serif; font-weight: 700; margin-bottom: 1.2rem; }
+  .summary-rows { display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 1.2rem; }
+  .sum-row { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--muted); }
+  .sum-row.total { color: var(--text); font-weight: 700; font-size: 1rem; padding-top: 0.8rem; border-top: 1px solid var(--border); }
+  .sum-row.total .val { color: var(--orange); font-family: 'Syne', sans-serif; }
+  .tip-selector { display: flex; gap: 0.5rem; margin-bottom: 1.2rem; }
+  .tip-opt {
+    flex: 1; padding: 0.4rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: none; color: var(--muted);
+    font-family: inherit; font-size: 0.78rem; font-weight: 600;
+    cursor: pointer; text-align: center; transition: all 0.15s;
+  }
+  .tip-opt.active { border-color: var(--border-accent); color: var(--orange); background: var(--orange-glow); }
+
+  .payment-row {
+    display: flex; align-items: center; gap: 0.7rem;
+    background: var(--surface2);
+    border-radius: 10px; padding: 0.7rem;
+    margin-bottom: 1rem;
+    font-size: 0.82rem;
+  }
+  .card-icon {
+    background: #1C3CA6; color: white;
+    border-radius: 6px; padding: 3px 7px;
+    font-size: 0.7rem; font-weight: 800;
+  }
+
+  /* ─── TRACKING ─── */
+  .tracking-layout { display: grid; grid-template-columns: 1fr 340px; gap: 2rem; }
+  .track-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 2rem;
+  }
+  .track-order-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; }
+  .track-order-id { font-size: 0.78rem; color: var(--muted); margin-bottom: 4px; }
+  .track-order-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.2rem; }
+  .status-live {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(39,174,96,0.12);
+    border: 1px solid rgba(39,174,96,0.3);
+    border-radius: 20px; padding: 0.35rem 0.8rem;
+    font-size: 0.75rem; font-weight: 600; color: var(--green);
+  }
+
+  .steps {
+    display: flex; flex-direction: column; gap: 0; position: relative;
+    padding-left: 2rem; margin-bottom: 2rem;
+  }
+  .step { position: relative; padding-bottom: 1.8rem; }
+  .step:last-child { padding-bottom: 0; }
+  .step::before {
+    content: '';
+    position: absolute; left: -1.6rem; top: 20px;
+    width: 2px; height: calc(100% - 20px);
+    background: var(--border);
+  }
+  .step.done::before { background: var(--orange); }
+  .step:last-child::before { display: none; }
+  .step-dot {
+    position: absolute; left: -2rem;
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--surface);
+    top: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.5rem;
+  }
+  .step.done .step-dot { background: var(--orange); border-color: var(--orange); }
+  .step.active .step-dot { border-color: var(--orange); background: var(--surface); animation: ring 1.5s infinite; }
+  @keyframes ring { 0%,100%{box-shadow:0 0 0 0 rgba(255,107,53,0.4)} 50%{box-shadow:0 0 0 6px rgba(255,107,53,0)} }
+  .step-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 2px; }
+  .step.done .step-name { color: var(--text); }
+  .step-time { font-size: 0.75rem; color: var(--muted); }
+  .step.active .step-name { color: var(--orange); }
+
+  .map-placeholder {
+    background: var(--surface2);
+    border-radius: 16px;
+    height: 220px;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 0.5rem;
+    color: var(--muted); font-size: 0.85rem;
+    border: 1px solid var(--border);
+    margin-bottom: 1rem;
+    position: relative; overflow: hidden;
+  }
+  .map-placeholder::before {
+    content: ''; position: absolute; inset: 0;
+    background: 
+      repeating-linear-gradient(0deg, transparent, transparent 30px, rgba(255,255,255,0.02) 30px, rgba(255,255,255,0.02) 31px),
+      repeating-linear-gradient(90deg, transparent, transparent 30px, rgba(255,255,255,0.02) 30px, rgba(255,255,255,0.02) 31px);
+  }
+  .map-pin {
+    font-size: 2.5rem; position: relative; z-index: 1;
+    animation: bounce 1.2s ease infinite;
+  }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+
+  .driver-card {
+    background: var(--surface2);
+    border-radius: 14px; padding: 1rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .driver-avatar {
+    width: 50px; height: 50px; border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; flex-shrink: 0;
+  }
+  .driver-info .driver-name { font-weight: 700; font-size: 0.9rem; }
+  .driver-info .driver-sub { font-size: 0.72rem; color: var(--muted); }
+  .driver-actions { margin-left: auto; display: flex; gap: 0.5rem; }
+  .call-btn, .chat-btn {
+    width: 36px; height: 36px;
+    border-radius: 10px; border: 1px solid var(--border);
+    background: var(--surface3);
+    color: var(--text); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; transition: all 0.15s;
+  }
+  .call-btn:hover { background: var(--green); border-color: var(--green); }
+  .chat-btn:hover { background: var(--orange); border-color: var(--orange); }
+
+  .eta-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px; padding: 2rem;
+    text-align: center;
+  }
+  .eta-number {
+    font-family: 'Syne', sans-serif;
+    font-size: 3.5rem; font-weight: 800;
+    color: var(--orange); line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+  .eta-label { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; }
+  .eta-progress { background: var(--surface2); border-radius: 30px; height: 6px; overflow: hidden; margin-bottom: 1.5rem; }
+  .eta-bar { height: 100%; background: linear-gradient(90deg, var(--orange), var(--gold)); border-radius: 30px; width: 65%; transition: width 0.5s; }
+  .eta-info-row { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--muted); }
+
+  /* ─── CONTACT ─── */
+  .contact-layout { display: grid; grid-template-columns: 1fr 320px; gap: 2rem; align-items: start; }
+  .form-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px; padding: 2rem;
+  }
+  .form-card h2 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.3rem; margin-bottom: 0.5rem; }
+  .form-card p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; }
+  .form-group { margin-bottom: 1.1rem; }
+  .form-label { font-size: 0.78rem; font-weight: 600; color: var(--muted); margin-bottom: 0.4rem; display: block; }
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.7rem 1rem;
+    color: var(--text);
+    font-family: inherit; font-size: 0.875rem;
+    outline: none; transition: border-color 0.15s;
+  }
+  .form-input:focus, .form-textarea:focus { border-color: var(--border-accent); }
+  .form-textarea { resize: vertical; min-height: 120px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .submit-btn {
+    width: 100%; padding: 0.85rem;
+    background: var(--orange); color: white; border: none;
+    border-radius: 30px; font-family: inherit;
+    font-size: 0.9rem; font-weight: 700; cursor: pointer;
+    transition: all 0.18s; margin-top: 0.5rem;
+  }
+  .submit-btn:hover { background: var(--orange-dark); transform: translateY(-1px); }
+
+  .contact-info-stack { display: flex; flex-direction: column; gap: 1rem; }
+  .contact-info-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.3rem;
+  }
+  .contact-info-card h4 { font-family: 'Syne', sans-serif; font-weight: 700; margin-bottom: 0.7rem; }
+  .info-item { display: flex; gap: 0.7rem; align-items: flex-start; font-size: 0.82rem; margin-bottom: 0.7rem; }
+  .info-item:last-child { margin-bottom: 0; }
+  .info-icon { font-size: 1rem; margin-top: 1px; flex-shrink: 0; }
+  .info-text { color: var(--muted); line-height: 1.4; }
+  .social-row { display: flex; gap: 0.5rem; margin-top: 0.3rem; }
+  .social-btn {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: var(--surface2); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; cursor: pointer; transition: all 0.15s;
+  }
+  .social-btn:hover { border-color: var(--border-accent); background: var(--orange-glow); }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 10px; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .sidebar { transform: translateX(-100%); }
+    .main { margin-left: 0; }
+    .detail-layout, .cart-layout, .tracking-layout, .contact-layout { grid-template-columns: 1fr; }
+    .promos-row { grid-template-columns: 1fr; }
+    .hero { flex-direction: column; }
+    .hero-visual { align-items: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<nav class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">🍔</div>
+    <div class="logo-text">Quick<span>Bite</span></div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Principal</div>
+    <button class="nav-item active" onclick="showPage('home',this)">
+      <span class="nav-icon">🏠</span> Inicio
+    </button>
+    <button class="nav-item" onclick="showPage('menu',this)">
+      <span class="nav-icon">🍽️</span> Menú
+    </button>
+    <button class="nav-item" onclick="showPage('platillos',this)">
+      <span class="nav-icon">⭐</span> Platillos
+    </button>
+    <button class="nav-item" onclick="showPage('cart',this)">
+      <span class="nav-icon">🛒</span> Mi Carrito
+      <span class="nav-badge">3</span>
+    </button>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Orden</div>
+    <button class="nav-item" onclick="showPage('tracking',this)">
+      <span class="nav-icon">📍</span> Seguimiento
+    </button>
+    <button class="nav-item" onclick="showPage('contact',this)">
+      <span class="nav-icon">💬</span> Contacto
+    </button>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Cuenta</div>
+    <button class="nav-item">
+      <span class="nav-icon">❤️</span> Favoritos
+    </button>
+    <button class="nav-item">
+      <span class="nav-icon">📋</span> Mis Pedidos
+    </button>
+    <button class="nav-item">
+      <span class="nav-icon">⚙️</span> Configuración
+    </button>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="avatar">CL</div>
+      <div class="user-info">
+        <div class="user-name">Carlos López</div>
+        <div class="user-sub">Plan Premium ✨</div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-title" id="page-title">Inicio</div>
+    <div class="search-bar">
+      <span class="search-icon">🔍</span>
+      <input type="text" placeholder="Buscar platillos, restaurantes...">
+    </div>
+    <div class="topbar-actions">
+      <div class="delivery-badge">
+        <span class="dot"></span> Entregamos en 25 min
+      </div>
+      <div class="icon-btn" onclick="showPage('cart', document.querySelector('[onclick*=cart]'))">🛒</div>
+      <div class="icon-btn">🔔</div>
+    </div>
+  </div>
+
+  <!-- ════════════════════ HOME ════════════════════ -->
+  <div id="home" class="page active">
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-content">
+        <div class="hero-eyebrow">⚡ Entrega en 25 minutos</div>
+        <h1>¿Qué se te<br>antoja <em>hoy</em>?</h1>
+        <p>Los mejores restaurantes de la ciudad en la palma de tu mano. Fresco, rápido y delicioso.</p>
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="showPage('menu',document.querySelector('[onclick*=menu]'))">
+            🍽️ Ver Menú Completo
+          </button>
+          <button class="btn-outline">🎁 Mis Ofertas</button>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-stats">
+          <div class="stat-chip"><span class="num">50+</span><span class="lbl">Restaurantes</span></div>
+          <div class="stat-chip"><span class="num">4.9</span><span class="lbl">Rating</span></div>
+          <div class="stat-chip"><span class="num">25m</span><span class="lbl">Entrega</span></div>
+        </div>
+        <span class="hero-food-emoji">🍔</span>
+      </div>
+    </div>
+
+    <!-- PROMOS -->
+    <div class="promos-row">
+      <div class="promo-card orange">
+        <div class="promo-content">
+          <div class="promo-tag">Oferta Especial</div>
+          <div class="promo-title">30% OFF<br>en tu primera orden</div>
+          <div class="promo-sub">Usa el código: QUICK30</div>
+          <button class="promo-btn">Aplicar ahora →</button>
+        </div>
+        <div class="promo-emoji">🎉</div>
+      </div>
+      <div class="promo-card dark">
+        <div class="promo-content">
+          <div class="promo-tag" style="color:var(--muted)">QuickBite Premium</div>
+          <div class="promo-title">Envío gratis<br>ilimitado</div>
+          <div class="promo-sub">Solo $99/mes · Cancela cuando quieras</div>
+          <button class="btn-primary" style="margin-top:0.8rem;font-size:0.75rem;padding:0.35rem 0.9rem;">Únete ahora →</button>
+        </div>
+        <div class="promo-emoji">👑</div>
+      </div>
+    </div>
+
+    <!-- CATEGORIES -->
+    <div class="section-header">
+      <div class="section-title">Categorías <small>Explora por tipo</small></div>
+    </div>
+    <div class="categories-row">
+      <div class="cat-chip active"><span class="cat-emoji">🔥</span><span class="cat-name">Populares</span></div>
+      <div class="cat-chip"><span class="cat-emoji">🍔</span><span class="cat-name">Hamburguesas</span></div>
+      <div class="cat-chip"><span class="cat-emoji">🍕</span><span class="cat-name">Pizza</span></div>
+      <div class="cat-chip"><span class="cat-emoji">🌮</span><span class="cat-name">Tacos</span></div>
+      <div class="cat-chip"><span class="cat-emoji">🍣</span><span class="cat-name">Sushi</span></div>
+      <div class="cat-chip"><span class="cat-emoji">🍜</span><span class="cat-name">Ramen</span></div>
+      <div class="cat-chip"><span class="cat-emoji">🥗</span><span class="cat-name">Ensaladas</span></div>
+      <div class="cat-chip"><span class="cat-emoji">🍦</span><span class="cat-name">Postres</span></div>
+      <div class="cat-chip"><span class="cat-emoji">🥤</span><span class="cat-name">Bebidas</span></div>
+    </div>
+
+    <!-- FEATURED DISHES -->
+    <div class="section-header">
+      <div class="section-title">Más Pedidos 🔥</div>
+      <span class="see-all" onclick="showPage('platillos',document.querySelector('[onclick*=platillos]'))">Ver todos →</span>
+    </div>
+    <div class="food-grid" style="margin-bottom:2rem">
+      <div class="food-card" onclick="showPage('platillos',document.querySelector('[onclick*=platillos]'))">
+        <div class="food-card-img"><span class="badge-hot">🔥 Hot</span>🍔</div>
+        <div class="food-card-body">
+          <div class="food-name">Smash Burger Clásica</div>
+          <div class="food-desc">Doble carne, cheddar americano, pepinillos y salsa secreta</div>
+          <div class="food-footer">
+            <span class="food-price">$185</span>
+            <span class="food-rating"><span class="star">★</span>4.9 (312)</span>
+            <button class="add-btn" onclick="event.stopPropagation()">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="food-card">
+        <div class="food-card-img"><span class="badge-new">✨ Nuevo</span>🍕</div>
+        <div class="food-card-body">
+          <div class="food-name">Pizza Trufa Negra</div>
+          <div class="food-desc">Base de crema de trufa, mozzarella búfala, rúcula y jamón serrano</div>
+          <div class="food-footer">
+            <span class="food-price">$249</span>
+            <span class="food-rating"><span class="star">★</span>4.8 (187)</span>
+            <button class="add-btn" onclick="event.stopPropagation()">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="food-card">
+        <div class="food-card-img"><span class="badge-popular">⭐ Top</span>🌮</div>
+        <div class="food-card-body">
+          <div class="food-name">Taco de Birria</div>
+          <div class="food-desc">Carne de res estofada, queso Oaxaca, consomé para dipear</div>
+          <div class="food-footer">
+            <span class="food-price">$65</span>
+            <span class="food-rating"><span class="star">★</span>5.0 (589)</span>
+            <button class="add-btn" onclick="event.stopPropagation()">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="food-card">
+        <div class="food-card-img">🍣</div>
+        <div class="food-card-body">
+          <div class="food-name">Sushi Roll Spicy</div>
+          <div class="food-desc">Atún spicy, aguacate, pepino, salsa sriracha y tobiko</div>
+          <div class="food-footer">
+            <span class="food-price">$195</span>
+            <span class="food-rating"><span class="star">★</span>4.7 (231)</span>
+            <button class="add-btn" onclick="event.stopPropagation()">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- POPULAR RESTAURANTS -->
+    <div class="section-header">
+      <div class="section-title">Restaurantes Destacados</div>
+      <span class="see-all">Ver todos →</span>
+    </div>
+    <div class="rest-grid" style="margin-bottom:2rem">
+      <div class="rest-card">
+        <div class="rest-emoji-wrap">🍔</div>
+        <div class="rest-info">
+          <div class="rest-name">Burger Bros</div>
+          <div class="rest-tags">Hamburguesas · Papas · Malteadas</div>
+          <div class="rest-meta">
+            <span><span class="star">★</span> 4.9</span>
+            <span>⏱ 20–30 min</span>
+            <span>🛵 $25</span>
+          </div>
+        </div>
+      </div>
+      <div class="rest-card">
+        <div class="rest-emoji-wrap">🍕</div>
+        <div class="rest-info">
+          <div class="rest-name">Napoli Express</div>
+          <div class="rest-tags">Pizza · Pasta · Antipasti</div>
+          <div class="rest-meta">
+            <span><span class="star">★</span> 4.8</span>
+            <span>⏱ 25–40 min</span>
+            <span>🛵 Gratis</span>
+          </div>
+        </div>
+      </div>
+      <div class="rest-card">
+        <div class="rest-emoji-wrap">🌮</div>
+        <div class="rest-info">
+          <div class="rest-name">La Birriería</div>
+          <div class="rest-tags">Birria · Tacos · Quesabirria</div>
+          <div class="rest-meta">
+            <span><span class="star">★</span> 5.0</span>
+            <span>⏱ 15–25 min</span>
+            <span>🛵 $20</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════ MENÚ ════════════════════ -->
+  <div id="menu" class="page">
+    <div class="menu-header">
+      <button class="filter-btn active">Todos</button>
+      <button class="filter-btn">🍔 Hamburguesas</button>
+      <button class="filter-btn">🍕 Pizzas</button>
+      <button class="filter-btn">🌮 Tacos</button>
+      <button class="filter-btn">🍣 Sushi</button>
+      <button class="filter-btn">🥗 Saludable</button>
+      <button class="filter-btn">🍜 Sopas</button>
+      <button class="filter-btn">🍦 Postres</button>
+    </div>
+
+    <!-- HAMBURGUESAS -->
+    <div class="section-header"><div class="section-title">🍔 Hamburguesas</div></div>
+    <div class="menu-grid" style="margin-bottom:2rem">
+      <div class="menu-card" onclick="showPage('platillos',document.querySelector('[onclick*=platillos]'))">
+        <div class="menu-img">🍔</div>
+        <div class="menu-info">
+          <div class="menu-name">Smash Burger Clásica</div>
+          <div class="menu-desc">Doble carne, cheddar, pepinillos, salsa secreta</div>
+          <div class="menu-bottom">
+            <span class="menu-price">$185</span>
+            <span style="font-size:0.72rem;color:var(--muted)"><span class="star">★</span> 4.9</span>
+            <button class="add-btn" onclick="event.stopPropagation()">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="menu-card">
+        <div class="menu-img">🥩</div>
+        <div class="menu-info">
+          <div class="menu-name">BBQ Bacon Burger</div>
+          <div class="menu-desc">Carne 180g, tocino ahumado, BBQ, cebolla caramelizada</div>
+          <div class="menu-bottom">
+            <span class="menu-price">$215</span>
+            <span style="font-size:0.72rem;color:var(--muted)"><span class="star">★</span> 4.7</span>
+            <button class="add-btn">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="menu-card">
+        <div class="menu-img">🌿</div>
+        <div class="menu-info">
+          <div class="menu-name">Veggie Burger</div>
+          <div class="menu-desc">Medallón de lentejas, lechuga, tomate, mayonesa vegana</div>
+          <div class="menu-bottom">
+            <span class="menu-price">$165</span>
+            <span style="font-size:0.72rem;color:var(--muted)"><span class="star">★</span> 4.6</span>
+            <button class="add-btn">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="menu-card">
+        <div class="menu-img">🧀</div>
+        <div class="menu-info">
+          <div class="menu-name">Double Cheese</div>
+          <div class="menu-desc">Dos carnes, doble cheddar, mostaza, cebolla blanca</div>
+          <div class="menu-bottom">
+            <span class="menu-price">$220</span>
+            <span style="font-size:0.72rem;color:var(--muted)"><span class="star">★</span> 4.8</span>
+            <button class="add-btn">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PIZZAS -->
+    <div class="section-header"><div class="section-title">🍕 Pizzas</div></div>
+    <div class="menu-grid" style="margin-bottom:2rem">
+      <div class="menu-card">
+        <div class="menu-img">🍕</div>
+        <div class="menu-info">
+          <div class="menu-name">Margherita DOP</div>
+          <div class="menu-desc">Salsa San Marzano, fior di latte, albahaca fresca</div>
+          <div class="menu-bottom">
+            <span class="menu-price">$199</span>
+            <span style="font-size:0.72rem;color:var(--muted)"><span class="star">★</span> 4.9</span>
+            <button class="add-btn">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="menu-card">
+        <div class="menu-img">🥩</div>
+        <div class="menu-info">
+          <div class="menu-name">Carnívora Extrema</div>
+          <div class="menu-desc">Pepperoni, salami, chorizo, jamón y mozzarella extra</div>
+          <div class="menu-bottom">
+            <span class="menu-price">$269</span>
+            <span style="font-size:0.72rem;color:var(--muted)"><span class="star">★</span> 4.8</span>
+            <button class="add-btn">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="menu-card">
+        <div class="menu-img">🍄</div>
+        <div class="menu-info">
+          <div class="menu-name">Funghi e Trufa</div>
+          <div class="menu-desc">Crema de trufa, portobello, champiñón, tomillo</div>
+          <div class="menu-bottom">
+            <span class="menu-price">$249</span>
+            <span style="font-size:0.72rem;color:var(--muted)"><span class="star">★</span> 4.7</span>
+            <button class="add-btn">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="menu-card">
+        <div class="menu-img">🌶️</div>
+        <div class="menu-info">
+          <div class="menu-name">Diavola Spicy</div>
+          <div class="menu-desc">Salsa picante, nduja, jalapeños, honey drizzle</div>
+          <div class="menu-bottom">
+            <span class="menu-price">$235</span>
+            <span style="font-size:0.72rem;color:var(--muted)"><span class="star">★</span> 4.6</span>
+            <button class="add-btn">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TACOS -->
+    <div class="section-header"><div class="section-title">🌮 Tacos</div></div>
+    <div class="menu-grid" style="margin-bottom:2rem">
+      <div class="menu-card">
+        <div class="menu-img">🌮</div>
+        <div class="menu-info">
+          <div class="menu-name">Taco de Birria</div>
+          <div class="menu-desc">Carne estofada, queso Oaxaca, tortilla de maíz, consomé</div>
+          <div class="menu-bottom">
+            <span class="menu-price">$65 c/u</span>
+            <span style="font-size:0.72rem;color:var(--muted)"><span class="star">★</span> 5.0</span>
+            <button class="add-btn">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="menu-card">
+        <div class="menu-img">🐟</div>
+        <div class="menu-info">
+          <div class="menu-name">Taco de Pescado</div>
+          <div class="menu-desc">Filete empanizado, coleslaw, chipotle, pico de gallo</div>
+          <div class="menu-bottom">
+            <span class="menu-price">$72 c/u</span>
+            <span style="font-size:0.72rem;color:var(--muted)"><span class="star">★</span> 4.8</span>
+            <button class="add-btn">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="menu-card">
+        <div class="menu-img">🥩</div>
+        <div class="menu-info">
+          <div class="menu-name">Pastor con Piña</div>
+          <div class="menu-desc">Carne adobada al pastor, piña fresca, cilantro, cebolla</div>
+          <div class="menu-bottom">
+            <span class="menu-price">$58 c/u</span>
+            <span style="font-size:0.72rem;color:var(--muted)"><span class="star">★</span> 4.9</span>
+            <button class="add-btn">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- POSTRES -->
+    <div class="section-header"><div class="section-title">🍦 Postres</div></div>
+    <div class="menu-grid">
+      <div class="menu-card">
+        <div class="menu-img">🍮</div>
+        <div class="menu-info">
+          <div class="menu-name">Churros con Nutella</div>
+          <div class="menu-desc">4 churros recién hechos con dip de Nutella y cajeta</div>
+          <div class="menu-bottom">
+            <span class="menu-price">$89</span>
+            <span style="font-size:0.72rem;color:var(--muted)"><span class="star">★</span> 4.9</span>
+            <button class="add-btn">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="menu-card">
+        <div class="menu-img">🍰</div>
+        <div class="menu-info">
+          <div class="menu-name">Cheesecake NY</div>
+          <div class="menu-desc">Base de galleta, queso crema, frutos rojos frescos</div>
+          <div class="menu-bottom">
+            <span class="menu-price">$109</span>
+            <span style="font-size:0.72rem;color:var(--muted)"><span class="star">★</span> 4.8</span>
+            <button class="add-btn">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="menu-card">
+        <div class="menu-img">🍫</div>
+        <div class="menu-info">
+          <div class="menu-name">Brownie Lava</div>
+          <div class="menu-desc">Brownie tibio, centro de chocolate caliente, helado vainilla</div>
+          <div class="menu-bottom">
+            <span class="menu-price">$95</span>
+            <span style="font-size:0.72rem;color:var(--muted)"><span class="star">★</span> 4.9</span>
+            <button class="add-btn">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════ PLATILLOS / DETAIL ════════════════════ -->
+  <div id="platillos" class="page">
+    <div class="detail-back" onclick="showPage('home',document.querySelector('[onclick*=home]'))">← Regresar al inicio</div>
+    <div class="detail-layout">
+      <div class="detail-main">
+        <div class="detail-hero">🍔</div>
+        <div class="detail-title">Smash Burger Clásica</div>
+        <div class="detail-meta">
+          <span class="detail-chip">⭐ 4.9 (312 reseñas)</span>
+          <span class="detail-chip">⏱ 20–30 min</span>
+          <span class="detail-chip">🍔 Burger Bros</span>
+          <span class="detail-chip" style="color:var(--green)">✓ Disponible</span>
+        </div>
+        <p class="detail-desc">
+          Nuestra estrella indiscutible. Dos medallones de carne de res 100% Angus aplastados a la plancha para maximizar el sabor, fundidos con queso cheddar americano, acompañados de pepinillos en vinagre, lechuga crocante y nuestra salsa secreta de la casa. Servida en pan brioche tostado con mantequilla.
+        </p>
+
+        <div class="detail-section">
+          <h3>Tamaño</h3>
+          <div class="option-group">
+            <button class="option-pill active">Simple (1 carne)</button>
+            <button class="option-pill">Doble (2 carnes)</button>
+            <button class="option-pill">Triple (3 carnes)</button>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h3>Punto de cocción</h3>
+          <div class="option-group">
+            <button class="option-pill">Término 3/4</button>
+            <button class="option-pill active">Bien cocida</button>
+            <button class="option-pill">Jugosa</button>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h3>Extras (+)</h3>
+          <div class="extras-list">
+            <div class="extra-item">
+              <div style="display:flex;gap:10px;align-items:center">
+                <div class="extra-chk checked" onclick="this.classList.toggle('checked')">✓</div>
+                <span>Tocino extra ahumado</span>
+              </div>
+              <span class="extra-price">+$35</span>
+            </div>
+            <div class="extra-item">
+              <div style="display:flex;gap:10px;align-items:center">
+                <div class="extra-chk" onclick="this.classList.toggle('checked')">✓</div>
+                <span>Queso extra</span>
+              </div>
+              <span class="extra-price">+$20</span>
+            </div>
+            <div class="extra-item">
+              <div style="display:flex;gap:10px;align-items:center">
+                <div class="extra-chk" onclick="this.classList.toggle('checked')">✓</div>
+                <span>Aguacate fresco</span>
+              </div>
+              <span class="extra-price">+$25</span>
+            </div>
+            <div class="extra-item">
+              <div style="display:flex;gap:10px;align-items:center">
+                <div class="extra-chk" onclick="this.classList.toggle('checked')">✓</div>
+                <span>Papas medianas</span>
+              </div>
+              <span class="extra-price">+$45</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h3>Instrucciones especiales</h3>
+          <textarea class="form-textarea" style="height:80px" placeholder="Ej. Sin cebolla, sin pepinillos, extra salsa..."></textarea>
+        </div>
+      </div>
+
+      <!-- ORDER PANEL -->
+      <div class="order-panel">
+        <h3>🛒 Agregar al carrito</h3>
+        <div class="qty-ctrl">
+          <button class="qty-btn" onclick="changeQty(-1)">−</button>
+          <span class="qty-num" id="qty">1</span>
+          <button class="qty-btn" onclick="changeQty(1)">+</button>
+        </div>
+        <div class="price-breakdown">
+          <div class="price-row"><span>Smash Burger Clásica</span><span>$185</span></div>
+          <div class="price-row"><span>Tocino extra</span><span>+$35</span></div>
+          <div class="price-row"><span>Envío</span><span style="color:var(--green)">Gratis</span></div>
+          <div class="price-row total"><span>Total</span><span class="amount">$220</span></div>
+        </div>
+        <button class="btn-primary" style="width:100%;justify-content:center;padding:0.85rem" onclick="showPage('cart',document.querySelector('[onclick*=cart]'))">
+          Agregar al carrito 🛒
+        </button>
+        <div style="display:flex;gap:0.5rem;margin-top:0.7rem">
+          <button class="btn-outline" style="flex:1;justify-content:center;font-size:0.8rem">❤️ Guardar</button>
+          <button class="btn-outline" style="flex:1;justify-content:center;font-size:0.8rem">↗️ Compartir</button>
+        </div>
+
+        <div style="margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--border)">
+          <div style="font-size:0.78rem;font-weight:700;margin-bottom:0.7rem;color:var(--muted)">TAMBIÉN TE PUEDE GUSTAR</div>
+          <div style="display:flex;flex-direction:column;gap:0.5rem">
+            <div style="display:flex;gap:0.7rem;align-items:center;cursor:pointer;padding:0.5rem;border-radius:10px;transition:background 0.15s" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='none'">
+              <span style="font-size:1.4rem">🥤</span>
+              <div style="flex:1"><div style="font-size:0.8rem;font-weight:600">Malteada de Oreo</div><div style="font-size:0.7rem;color:var(--muted)">$95</div></div>
+              <button class="add-btn" style="width:26px;height:26px;font-size:0.9rem">+</button>
+            </div>
+            <div style="display:flex;gap:0.7rem;align-items:center;cursor:pointer;padding:0.5rem;border-radius:10px;transition:background 0.15s" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='none'">
+              <span style="font-size:1.4rem">🍟</span>
+              <div style="flex:1"><div style="font-size:0.8rem;font-weight:600">Papas con Queso</div><div style="font-size:0.7rem;color:var(--muted)">$85</div></div>
+              <button class="add-btn" style="width:26px;height:26px;font-size:0.9rem">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════ CARRITO ════════════════════ -->
+  <div id="cart" class="page">
+    <div class="cart-layout">
+      <div>
+        <div class="section-header" style="margin-bottom:1rem">
+          <div class="section-title">Mi Carrito <small>3 productos</small></div>
+          <span style="font-size:0.8rem;color:#FF4444;cursor:pointer">🗑 Limpiar carrito</span>
+        </div>
+
+        <div class="cart-items">
+          <div class="cart-item">
+            <div class="cart-item-img">🍔</div>
+            <div class="cart-item-info">
+              <div class="cart-item-name">Smash Burger Clásica</div>
+              <div class="cart-item-opts">Doble carne · Tocino extra · Sin cebolla</div>
+            </div>
+            <div class="cart-item-right">
+              <div class="cart-item-price">$220</div>
+              <div class="mini-qty">
+                <button class="mini-btn">−</button>
+                <span style="font-size:0.85rem;font-weight:700">1</span>
+                <button class="mini-btn">+</button>
+              </div>
+              <button class="del-btn">🗑</button>
+            </div>
+          </div>
+
+          <div class="cart-item">
+            <div class="cart-item-img">🍕</div>
+            <div class="cart-item-info">
+              <div class="cart-item-name">Pizza Margherita DOP</div>
+              <div class="cart-item-opts">Mediana · Extra albahaca</div>
+            </div>
+            <div class="cart-item-right">
+              <div class="cart-item-price">$199</div>
+              <div class="mini-qty">
+                <button class="mini-btn">−</button>
+                <span style="font-size:0.85rem;font-weight:700">1</span>
+                <button class="mini-btn">+</button>
+              </div>
+              <button class="del-btn">🗑</button>
+            </div>
+          </div>
+
+          <div class="cart-item">
+            <div class="cart-item-img">🥤</div>
+            <div class="cart-item-info">
+              <div class="cart-item-name">Malteada de Oreo</div>
+              <div class="cart-item-opts">Grande · Con crema</div>
+            </div>
+            <div class="cart-item-right">
+              <div class="cart-item-price">$95</div>
+              <div class="mini-qty">
+                <button class="mini-btn">−</button>
+                <span style="font-size:0.85rem;font-weight:700">2</span>
+                <button class="mini-btn">+</button>
+              </div>
+              <button class="del-btn">🗑</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="coupon-row">
+          <span style="font-size:1.1rem">🎟</span>
+          <input class="coupon-input" placeholder="Código de descuento...">
+          <button class="btn-primary" style="padding:0.5rem 1.2rem;font-size:0.82rem">Aplicar</button>
+        </div>
+
+        <!-- UPSELL -->
+        <div style="margin-top:1.5rem">
+          <div class="section-header"><div class="section-title">¿Agregas algo más?</div></div>
+          <div style="display:flex;gap:0.8rem;overflow-x:auto;padding-bottom:0.3rem">
+            <div class="food-card" style="min-width:180px">
+              <div class="food-card-img" style="height:100px">🍟</div>
+              <div class="food-card-body">
+                <div class="food-name">Papas con Queso</div>
+                <div class="food-footer"><span class="food-price">$85</span><button class="add-btn">+</button></div>
+              </div>
+            </div>
+            <div class="food-card" style="min-width:180px">
+              <div class="food-card-img" style="height:100px">🍦</div>
+              <div class="food-card-body">
+                <div class="food-name">Helado de Vainilla</div>
+                <div class="food-footer"><span class="food-price">$55</span><button class="add-btn">+</button></div>
+              </div>
+            </div>
+            <div class="food-card" style="min-width:180px">
+              <div class="food-card-img" style="height:100px">🥤</div>
+              <div class="food-card-body">
+                <div class="food-name">Refresco 600ml</div>
+                <div class="food-footer"><span class="food-price">$35</span><button class="add-btn">+</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUMMARY -->
+      <div class="summary-card">
+        <div class="summary-title">Resumen de orden</div>
+
+        <div style="background:var(--surface2);border-radius:12px;padding:1rem;margin-bottom:1rem">
+          <div style="font-size:0.75rem;font-weight:700;color:var(--muted);margin-bottom:0.5rem">DIRECCIÓN DE ENTREGA</div>
+          <div style="font-size:0.85rem;font-weight:600">📍 Av. Hidalgo 142, Col. Centro</div>
+          <div style="font-size:0.72rem;color:var(--muted);margin-top:2px">Tula de Allende, Hgo. · 45801</div>
+          <span style="font-size:0.72rem;color:var(--orange);cursor:pointer">Cambiar dirección →</span>
+        </div>
+
+        <div style="font-size:0.78rem;font-weight:700;color:var(--muted);margin-bottom:0.5rem">PROPINA AL REPARTIDOR</div>
+        <div class="tip-selector" style="margin-bottom:1rem">
+          <button class="tip-opt">$10</button>
+          <button class="tip-opt active">$20</button>
+          <button class="tip-opt">$30</button>
+          <button class="tip-opt">Otro</button>
+        </div>
+
+        <div class="summary-rows">
+          <div class="sum-row"><span>Subtotal (4 items)</span><span>$609</span></div>
+          <div class="sum-row"><span>Envío</span><span style="color:var(--green)">Gratis 🎉</span></div>
+          <div class="sum-row"><span>Descuento (QUICK30)</span><span style="color:var(--green)">−$182</span></div>
+          <div class="sum-row"><span>Propina</span><span>$20</span></div>
+          <div class="sum-row total"><span>Total a pagar</span><span class="val">$447</span></div>
+        </div>
+
+        <div class="payment-row">
+          <span class="card-icon">VISA</span>
+          <div>
+            <div style="font-size:0.82rem;font-weight:600">•••• •••• •••• 4291</div>
+            <div style="font-size:0.7rem;color:var(--muted)">Carlos López</div>
+          </div>
+          <span style="margin-left:auto;font-size:0.75rem;color:var(--orange);cursor:pointer">Cambiar</span>
+        </div>
+
+        <button class="submit-btn" onclick="showPage('tracking',document.querySelector('[onclick*=tracking]'))">
+          Realizar Pedido → $447
+        </button>
+        <div style="text-align:center;font-size:0.72rem;color:var(--muted);margin-top:0.7rem">
+          🔒 Pago 100% seguro y encriptado
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════ TRACKING ════════════════════ -->
+  <div id="tracking" class="page">
+    <div class="tracking-layout">
+      <div class="track-card">
+        <div class="track-order-header">
+          <div>
+            <div class="track-order-id">Pedido #QB-20847</div>
+            <div class="track-order-name">Smash Burger + Pizza + Malteada x2</div>
+          </div>
+          <div class="status-live">
+            <span class="dot"></span> En camino
+          </div>
+        </div>
+
+        <div class="map-placeholder">
+          <div class="map-pin">📍</div>
+          <span style="position:relative;z-index:1">Mapa en tiempo real</span>
+        </div>
+
+        <div class="steps">
+          <div class="step done">
+            <div class="step-dot">✓</div>
+            <div class="step-name">Pedido confirmado</div>
+            <div class="step-time">5:32 PM · Pago recibido</div>
+          </div>
+          <div class="step done">
+            <div class="step-dot">✓</div>
+            <div class="step-name">Restaurante preparando</div>
+            <div class="step-time">5:35 PM · Burger Bros está cocinando tu orden</div>
+          </div>
+          <div class="step active">
+            <div class="step-dot"></div>
+            <div class="step-name">Repartidor en camino</div>
+            <div class="step-time">5:48 PM · Miguel está llevando tu pedido</div>
+          </div>
+          <div class="step">
+            <div class="step-dot"></div>
+            <div class="step-name">Entregado 🎉</div>
+            <div class="step-time">Est. 6:10 PM</div>
+          </div>
+        </div>
+
+        <div class="driver-card">
+          <div class="driver-avatar">🧑</div>
+          <div class="driver-info">
+            <div class="driver-name">Miguel Ángel Ruiz</div>
+            <div class="driver-sub">⭐ 4.98 · Honda CB150 · MXP-7823</div>
+          </div>
+          <div class="driver-actions">
+            <button class="call-btn">📞</button>
+            <button class="chat-btn">💬</button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="eta-card" style="margin-bottom:1rem">
+          <div class="eta-number">18</div>
+          <div class="eta-label">minutos para tu entrega</div>
+          <div class="eta-progress"><div class="eta-bar"></div></div>
+          <div class="eta-info-row">
+            <span>Pedido realizado 5:32 PM</span>
+            <span>Entrega ~6:10 PM</span>
+          </div>
+        </div>
+
+        <div class="track-card">
+          <div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:1rem">Resumen del pedido</div>
+          <div style="display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1rem">
+            <div style="display:flex;justify-content:space-between;font-size:0.83rem">
+              <span>🍔 Smash Burger Clásica x1</span><span>$220</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.83rem">
+              <span>🍕 Pizza Margherita x1</span><span>$199</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.83rem">
+              <span>🥤 Malteada de Oreo x2</span><span>$190</span>
+            </div>
+            <div style="border-top:1px solid var(--border);padding-top:0.6rem;display:flex;justify-content:space-between;font-weight:700">
+              <span>Total pagado</span><span style="color:var(--orange)">$447</span>
+            </div>
+          </div>
+          <div style="text-align:center;padding:0.8rem;background:var(--orange-glow);border:1px solid var(--border-accent);border-radius:10px;font-size:0.8rem;color:var(--orange);font-weight:600">
+            🎉 ¡Descuento QUICK30 aplicado! Ahorraste $182
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════ CONTACTO ════════════════════ -->
+  <div id="contact" class="page">
+    <div style="margin-bottom:1.5rem">
+      <div style="font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:0.4rem">
+        ¿Cómo podemos ayudarte? 💬
+      </div>
+      <div style="color:var(--muted);font-size:0.9rem">Estamos aquí para resolver tus dudas sobre pedidos, pagos o cualquier cosa.</div>
+    </div>
+
+    <div class="contact-layout">
+      <div class="form-card">
+        <h2>Envíanos un mensaje</h2>
+        <p>Responderemos en menos de 2 horas en días hábiles.</p>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nombre</label>
+            <input class="form-input" placeholder="Tu nombre completo">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Apellido</label>
+            <input class="form-input" placeholder="Tu apellido">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Correo electrónico</label>
+          <input class="form-input" type="email" placeholder="correo@ejemplo.com">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Teléfono (opcional)</label>
+          <input class="form-input" placeholder="+52 771 000 0000">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Asunto</label>
+          <select class="form-select">
+            <option>Problema con mi pedido</option>
+            <option>Reembolso o devolución</option>
+            <option>Problema con el pago</option>
+            <option>Sugerencia o feedback</option>
+            <option>Trabajar con QuickBite</option>
+            <option>Otro</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Número de pedido (si aplica)</label>
+          <input class="form-input" placeholder="Ej. QB-20847">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Mensaje</label>
+          <textarea class="form-textarea" placeholder="Cuéntanos cómo podemos ayudarte..."></textarea>
+        </div>
+
+        <button class="submit-btn">Enviar mensaje →</button>
+      </div>
+
+      <div class="contact-info-stack">
+        <div class="contact-info-card">
+          <h4>📍 Encuéntranos</h4>
+          <div class="info-item">
+            <span class="info-icon">🏢</span>
+            <div class="info-text">Av. Hidalgo 500, Piso 3<br>Col. Centro, Tula de Allende<br>Hidalgo, México 42800</div>
+          </div>
+          <div class="info-item">
+            <span class="info-icon">🕐</span>
+            <div class="info-text">Lunes a Viernes: 8am – 10pm<br>Sábados: 9am – 10pm<br>Domingos: 10am – 8pm</div>
+          </div>
+        </div>
+
+        <div class="contact-info-card">
+          <h4>📞 Contacto directo</h4>
+          <div class="info-item">
+            <span class="info-icon">📱</span>
+            <div class="info-text">+52 (771) 123 4567<br><span style="font-size:0.7rem">WhatsApp disponible</span></div>
+          </div>
+          <div class="info-item">
+            <span class="info-icon">📧</span>
+            <div class="info-text">soporte@quickbite.mx<br>hola@quickbite.mx</div>
+          </div>
+          <div class="info-item">
+            <span class="info-icon">⚡</span>
+            <div class="info-text">Chat en vivo disponible<br>Respuesta &lt; 5 minutos</div>
+          </div>
+        </div>
+
+        <div class="contact-info-card">
+          <h4>🌐 Redes sociales</h4>
+          <div style="font-size:0.82rem;color:var(--muted);margin-bottom:0.8rem">Síguenos para ofertas exclusivas y novedades</div>
+          <div class="social-row">
+            <div class="social-btn">📘</div>
+            <div class="social-btn">📷</div>
+            <div class="social-btn">🐦</div>
+            <div class="social-btn">📱</div>
+          </div>
+          <div style="margin-top:0.8rem;padding:0.8rem;background:var(--orange-glow);border:1px solid var(--border-accent);border-radius:10px;font-size:0.78rem;color:var(--orange);font-weight:600">
+            ⚡ Tiempo de respuesta promedio: 45 min
+          </div>
+        </div>
+
+        <div class="contact-info-card" style="background:var(--orange);border-color:transparent">
+          <h4 style="color:white">🚀 ¿Eres restaurante?</h4>
+          <p style="font-size:0.82rem;color:rgba(255,255,255,0.85);margin-bottom:0.8rem">Únete a nuestra red de más de 50 restaurantes y llega a miles de clientes nuevos.</p>
+          <button class="btn-outline" style="width:100%;justify-content:center;color:white;border-color:rgba(255,255,255,0.4)">Ver más →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+  const pageTitles = { home:'Inicio', menu:'Menú', platillos:'Platillos', cart:'Mi Carrito', tracking:'Seguimiento', contact:'Contacto' };
+
+  function showPage(id, btn) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    document.getElementById('page-title').textContent = pageTitles[id] || '';
+    window.scrollTo(0, 0);
+  }
+
+  let qty = 1;
+  function changeQty(d) {
+    qty = Math.max(1, qty + d);
+    document.getElementById('qty').textContent = qty;
+  }
+
+  document.querySelectorAll('.option-pill').forEach(p => {
+    p.addEventListener('click', () => {
+      p.closest('.option-group').querySelectorAll('.option-pill').forEach(x => x.classList.remove('active'));
+      p.classList.add('active');
+    });
+  });
+
+  document.querySelectorAll('.cat-chip').forEach(c => {
+    c.addEventListener('click', () => {
+      document.querySelectorAll('.cat-chip').forEach(x => x.classList.remove('active'));
+      c.classList.add('active');
+    });
+  });
+
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+    });
+  });
+
+  document.querySelectorAll('.tip-opt').forEach(t => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.tip-opt').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
